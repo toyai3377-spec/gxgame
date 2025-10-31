@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Admin - GoldoraX</title>
+<style>
+body { font-family: 'Prompt', sans-serif; background: #080032; color: #fff; text-align: center; padding: 40px;}
+input, button { padding: 10px; border-radius: 20px; border: 2px solid gold; margin: 10px; }
+button { background: gold; color: #001133; font-weight: bold; cursor: pointer;}
+#adminPanel { margin-top: 30px; }
+ul { list-style: none; padding: 0;}
+li { background: #222; margin: 5px; padding: 10px; border-radius: 10px;}
+</style>
+</head>
+<body>
+<h1>หน้าสำหรับแอดมิน</h1>
+<form id="adminLoginForm">
+  <input type="password" id="adminPassword" placeholder="รหัสแอดมิน" required>
+  <button type="submit">เข้าสู่ระบบ</button>
+</form>
+<div id="adminPanel" style="display:none;">
+  <h2>รายชื่อผู้เล่น (ตัวอย่าง)</h2>
+  <ul id="playerList">
+    <li>ผู้เล่น1</li>
+    <li>ผู้เล่น2</li>
+    <li>ผู้เล่น3</li>
+  </ul>
+</div>
+<script>
+document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const password = document.getElementById('adminPassword').value;
+  if(password === "admin123"){ // ใส่รหัสแอดมินจริงตรงนี้
+    document.getElementById('adminPanel').style.display = "block";
+    document.getElementById('adminLoginForm').style.display = "none";
+  } else {
+    alert("รหัสผ่านไม่ถูกต้อง!");
+  }
+});
+</script>
+</body>
+</html>
