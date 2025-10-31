@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกมน้ำเต้าปูปลา | GoldoraX</title>
+<style>
+body {
+  font-family: 'Prompt', sans-serif;
+  margin:0; padding:0;
+  background: radial-gradient(circle at top, #001133, #000814 80%);
+  color:#fff;
+  text-align:center;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  overflow-x:hidden;
+}
+
+/* ปุ่มฝากถอน */
+header {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+}
+.deposit-btn {
+  display:inline-block;
+  padding:10px 18px;
+  background:gold;
+  color:black;
+  border-radius:30px;
+  font-weight:bold;
+  text-decoration:none;
+  font-size:16px;
+  box-shadow:0 0 10px gold;
+  transition:0.3s;
+}
+.deposit-btn:hover {
+  background:#ffe066;
+  box-shadow:0 0 15px gold;
+  transform:scale(1.05);
+}
+
+/* หัวข้อ */
+h1 {
+  color:gold;
+  text-shadow:0 0 2vw gold;
+  font-size:6vw;
+  margin-top:70px;
+}
+#balance {
+  background: rgba(255,255,255,0.1);
+  padding:1vw 2vw;
+  border-radius: 1vw;
+  box-shadow:0 0.5vw 1vw rgba(0,0,0,0.3);
+  font-size:4vw;
+  margin: 2vw 0;
+}
+
+/* ช่องกรอกเดิมพัน */
+#betInput {
+  padding:1vw 2vw;
+  border-radius:12px;
+  border:2px solid gold;
+  font-size:4vw;
+  width:70%;
+  max-width:220px;
+  text-align:center;
+  margin-bottom:2vw;
+  color:white;
+  background:rgba(255,255,255,0.15);
+}
+
+/* ปุ่มสัตว์น้ำเงินทองเรืองแสง */
+.animals {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:3vw;
+  justify-items:center;
+  width:90%;
+  max-width:500px;
+  margin-bottom:3vw;
+}
+.animal-btn {
+  width:24vw;
+  height:24vw;
+  font-size:8vw;
+  border:none;
+  border-radius:20%;
+  cursor:pointer;
+  color:white;
+  font-weight:bold;
+  background: linear-gradient(180deg, #1a237e, #0d47a1);
+  border: 2px solid gold;
+  box-shadow: 0 0 15px rgba(255,215,0,0.5);
+  transition: all 0.3s ease;
+}
+.animal-btn:hover {
+  box-shadow: 0 0 25px gold, 0 0 40px rgba(255,215,0,0.7);
+  transform: scale(1.08);
+}
+.animal-btn.selected {
+  box-shadow: 0 0 30px gold, 0 0 60px rgba(255,215,0,0.9);
+  transform: scale(1.12);
+}
+
+/* ปุ่มหมุน */
+button#roll {
+  background:linear-gradient(180deg,#FFD700,#FFB300);
+  color:black;
+  padding:2vw 6vw;
+  border:none;
+  border-radius:10vw;
+  font-size:5vw;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 0.8vw 1.5vw rgba(255,215,0,0.7);
+  margin-top:2vw;
+}
+button#roll:hover {
+  background:#ffe066;
+  transform:translateY(-1vw);
+}
+#diceArea {
+  font-size:10vw;
+  margin-top:2vw;
+}
+.result {
+  margin-top:3vw;
+  font-size:5vw;
+  color:#0f0;
+  text-shadow:0 0 1vw #0f0;
+}
+
+/* เอฟเฟกต์ชนะ */
+@keyframes winGlow {
+  0% { text-shadow: 0 0 20px gold; color: #fff; }
+  50% { text-shadow: 0 0 40px #FFD700; color: gold; }
+  100% { text-shadow: 0 0 20px gold; color: #fff; }
+}
+.result.win {
+  animation: winGlow 1s ease-in-out infinite alternate;
+}
+
+@media(max-width:480px){
+  .animal-btn {width:26vw;height:26vw;font-size:9vw;}
+  #betInput {font-size:5vw;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="https://lin.ee/Mm1caQx" target="_blank" class="deposit-btn">💰 ฝาก / ถอน</a>
+</header>
+
+<h1>🎲 เกมน้ำเต้าปูปลา 🎲</h1>
+<div id="balance">💰 ยอดเงินผู้เล่น: <span id="playerBalance">1000</span> บาท</div>
+<input id="betInput" type="number" placeholder="💸 จำนวนเงินเดิมพัน" min="1">
+<p>เลือกสัตว์ได้สูงสุด 3 ตัว แล้วกดหมุน!</p>
+
+<div class="animals">
+  <button class="animal-btn" data-animal="น้ำเต้า">🍐</button>
+  <button class="animal-btn" data-animal="ปู">🦀</button>
+  <button class="animal-btn" data-animal="ปลา">🐟</button>
+  <button class="animal-btn" data-animal="เสือ">🐯</button>
+  <button class="animal-btn" data-animal="ไก่">🐔</button>
+  <button class="animal-btn" data-animal="กุ้ง">🦐</button>
+</div>
+
+<button id="roll">หมุนลูกเต๋า</button>
+
+<div id="diceArea"></div>
+<div id="result" class="result"></div>
+
+<!-- เสียง -->
+<audio id="rollSound" src="https://www.soundjay.com/misc/sounds/dice-roll-1.mp3"></audio>
+<audio id="winSound" src="https://www.soundjay.com/button/sounds/button-3.mp3"></audio>
+<audio id="clickSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+
+<script>
+const animals=['น้ำเต้า','ปู','ปลา','เสือ','ไก่','กุ้ง'];
+const emojis=['🍐','🦀','🐟','🐯','🐔','🦐'];
+const selected=new Set();
+const diceArea=document.getElementById('diceArea');
+const result=document.getElementById('result');
+const balanceDisplay=document.getElementById('playerBalance');
+const rollSound=document.getElementById('rollSound');
+const winSound=document.getElementById('winSound');
+const clickSound=document.getElementById('clickSound');
+const betInput=document.getElementById('betInput');
+let balance=1000;
+
+// ✅ เลือกสัตว์ได้สูงสุด 3 ตัว
+document.querySelectorAll('.animal-btn').forEach((btn,i)=>{
+  btn.addEventListener('click',()=>{
+    clickSound.currentTime = 0;
+    clickSound.play();
+    const animal=animals[i];
+    if(selected.has(animal)){
+      selected.delete(animal);
+      btn.classList.remove('selected');
+    } else {
+      if(selected.size<3){
+        selected.add(animal);
+        btn.classList.add('selected');
+      }
+    }
+  });
+});
+
+// ✅ ระบบหมุนแบบคาสิโน (House Edge)
+document.getElementById('roll').addEventListener('click',()=>{
+  const betAmount=parseInt(betInput.value);
+  if(isNaN(betAmount)||betAmount<=0){alert('กรุณาใส่จำนวนเงินเดิมพันก่อน!');return;}
+  if(balance<betAmount){alert('ยอดเงินไม่เพียงพอ!');return;}
+  if(selected.size===0){alert('กรุณาเลือกสัตว์ก่อน!');return;}
+
+  balance -= betAmount;
+  balanceDisplay.textContent = balance;
+  diceArea.textContent = 'หมุน...';
+  result.textContent = '';
+  result.classList.remove('win');
+  rollSound.play();
+
+  setTimeout(() => {
+    const dice = [];
+    for (let i = 0; i < 3; i++) dice.push(Math.floor(Math.random() * animals.length));
+    diceArea.innerHTML = dice.map(i => emojis[i]).join(' ');
+
+    let hit = 0;
+    dice.forEach(i => { if (selected.has(animals[i])) hit++; });
+
+    if (hit > 0) {
+      // 💰 House Edge สมจริง
+      const payout = [0, 1.5, 2.5, 3][hit];
+      const win = betAmount * payout;
+      balance += win;
+      result.textContent = `🎉 คุณชนะ ${win.toFixed(2)} บาท!`;
+      result.classList.add('win');
+      winSound.play();
+    } else {
+      result.textContent = 'เสียใจ! รอบนี้คุณแพ้ 😢';
+    }
+
+    balanceDisplay.textContent = balance;
+    selected.clear();
+    document.querySelectorAll('.animal-btn').forEach(b => b.classList.remove('selected'));
+  }, 1000);
+});
+</script>
+</body>
+</html>
