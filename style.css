@@ -1,0 +1,5 @@
+body { font-family: Arial, sans-serif; text-align:center; background: linear-gradient(to right,#ff9a9e,#fad0c4); padding:20px; }
+button { padding:15px 25px; margin:10px; font-size:18px; border-radius:10px; border:none; cursor:pointer; transition: transform 0.2s; }
+button:hover { transform: scale(1.1); }
+#depositBtn { background:#ffcc00; }
+.diceBtn { background:#4caf50; color:white; }
